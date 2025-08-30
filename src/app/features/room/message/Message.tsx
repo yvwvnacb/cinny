@@ -750,6 +750,7 @@ export const Message = as<'div', MessageProps>(
         alignItems="Baseline"
         grow="Yes"
       >
+      {senderId !== mx.getUserId() && (
         <Box alignItems="Center" gap="200">
           <Username
             as="button"
@@ -768,6 +769,7 @@ export const Message = as<'div', MessageProps>(
           </Username>
           {tagIconSrc && <PowerIcon size="100" iconSrc={tagIconSrc} />}
         </Box>
+       )}
         <Box shrink="No" gap="100">
           {messageLayout === MessageLayout.Modern && hover && (
             <>
@@ -813,7 +815,11 @@ export const Message = as<'div', MessageProps>(
     );
 
     const msgContentJSX = (
-      <Box direction="Column" alignSelf="Start" style={{ maxWidth: '100%' }}>
+      <Box
+        direction="Column"
+        alignSelf={senderId === mx.getUserId() ? 'End' : 'Start'}
+        style={{ maxWidth: '100%' }}
+        >
         {reply}
         {edit && onEditId ? (
           <MessageEditor
@@ -1132,7 +1138,11 @@ export const Message = as<'div', MessageProps>(
           </CompactLayout>
         )}
         {messageLayout === MessageLayout.Bubble && (
-          <BubbleLayout before={avatarJSX} onContextMenu={handleContextMenu}>
+          <BubbleLayout
+            before={avatarJSX}
+            onContextMenu={handleContextMenu}
+            direction={senderId === mx.getUserId() ? 'RowReverse' : 'Row'}
+           >
             {headerJSX}
             {msgContentJSX}
           </BubbleLayout>
